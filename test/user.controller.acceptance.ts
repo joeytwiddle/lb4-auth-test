@@ -38,6 +38,10 @@ describe('UserController', () => {
       .expect(200);
   });
 
+  it('invokes GET /time', async () => {
+    await client.get('/time').expect(200);
+  });
+
   function givenAnApplication() {
     app = new AuthApplication({
       rest: {

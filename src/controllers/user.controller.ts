@@ -11,6 +11,11 @@ export class WhoAmIController {
     @inject(AuthenticationBindings.CURRENT_USER) private user: UserProfile,
   ) {}
 
+  @get('/time')
+  getTimeOfDay(): string {
+    return String(new Date());
+  }
+
   @authenticate('BasicStrategy')
   @get('/whoami')
   whoAmI(): string {
