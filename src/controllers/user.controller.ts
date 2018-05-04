@@ -11,6 +11,7 @@ export class WhoAmIController {
     @inject(AuthenticationBindings.CURRENT_USER) private user: UserProfile,
   ) {}
 
+  @authenticate('NotNeeded')
   @get('/time')
   getTimeOfDay(): string {
     return String(new Date());
