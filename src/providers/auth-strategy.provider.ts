@@ -6,6 +6,10 @@ import {
   UserProfile,
 } from '@loopback/authentication';
 import {BasicStrategy} from 'passport-http';
+const {
+  NoAuthStrategy,
+  OptionalAuthStrategy,
+} = require('optional-auth-strategy');
 
 export class MyAuthStrategyProvider implements Provider<Strategy | undefined> {
   constructor(
@@ -25,9 +29,9 @@ export class MyAuthStrategyProvider implements Provider<Strategy | undefined> {
     if (name === 'BasicStrategy') {
       return new BasicStrategy(this.verify);
     } else if (name === 'NotNeeded') {
-      // The BasicStrategy never calls this.dummy if no credentials were provided
-      // @todo So we would need to create a new DummyStrategy here
-      return new BasicStrategy(this.dummy);
+      return new NoAuthStrategy(() => {});
+    } else if (name === 'OptionalStrategy') {
+      return new OptionalAuthStrategy(new BasicStrategy(this.verify));
     } else {
       return Promise.reject(`The strategy ${name} is not available.`);
     }
@@ -41,14 +45,5 @@ export class MyAuthStrategyProvider implements Provider<Strategy | undefined> {
     console.log(`Verifying user: ${username} ---${password}---`);
     if (username === 'test' && password === 'test') cb(null, {id: '1'});
     else cb(null, false);
-  }
-
-  dummy(
-    username: string,
-    password: string,
-    cb: (err: Error | null, user?: UserProfile | false) => void,
-  ) {
-    console.log(`Giving the dummy  user some auth`);
-    cb(null, {id: 'none'});
   }
 }

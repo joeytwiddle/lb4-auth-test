@@ -17,6 +17,12 @@ export class WhoAmIController {
     return String(new Date());
   }
 
+  @authenticate('Optional')
+  @get('/amiloggedin')
+  amILoggedIn(): boolean {
+    return !!this.user;
+  }
+
   @authenticate('BasicStrategy')
   @get('/whoami')
   whoAmI(): string {
